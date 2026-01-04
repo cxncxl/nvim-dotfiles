@@ -1,38 +1,39 @@
+---------------------------------
+--- editor shortcuts, global ones
+---------------------------------
+
 vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
     callback = function()
-        vim.keymap.set("n", "<F3>", function()
-            require'dap'.toggle_breakpoint()
-        end, { silent = true, buffer = true })
+        vim.keymap.set("i", "jj", "<Esc>")
 
-        vim.keymap.set("n", "<F5>", function()
-            require'dap'.continue()
-        end, { silent = true, buffer = true })
+        vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", { silent = true });
+        vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", { silent = true });
+        vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { silent = true });
+        vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { silent = true });
 
-        vim.keymap.set("n", "<F4>", function()
-            require'dap'.repl.open()
-        end, { silent = true, buffer = true })
+        vim.keymap.set("n", "C-S-up", ":resize +5<CR>", { silent = true });
+        vim.keymap.set("n", "C-S-down", ":resize -5<CR>", { silent = true });
+        vim.keymap.set("n", "C-S-left", ":vertical resize -5<CR>", { silent = true });
+        vim.keymap.set("n", "C-S-right", ":vertical resize +5<CR>", { silent = true });
 
-        vim.keymap.set("n", "<Leader>M", ":Telescope lsp_workspace_symbols<CR>", { silent = true })
+        vim.keymap.set("n", "qq", ":q<CR>", { silent = true });
+        vim.keymap.set("n", "ss", ":w<CR>", { silent = true });
+        vim.keymap.set("n", "gg", ":nohl <CR> :let @/ = \"\"<CR>", { silent = true });
 
-        vim.keymap.set('n', '<Leader>a', vim.lsp.buf.code_action, { silent = true })
+        vim.keymap.set("n", "vv", ":vsplit<CR>", { silent = true });
 
-        vim.keymap.set('n', '<Leader>n', ':TSToggle highlight<CR>', { silent = false })
+        vim.keymap.set("n", "<leader>1", "1gt");
+        vim.keymap.set("n", "<leader>2", "2gt");
+        vim.keymap.set("n", "<leader>3", "3gt");
+        vim.keymap.set("n", "<leader>4", "4gt");
+        vim.keymap.set("n", "<leader>5", "5gt");
+        vim.keymap.set("n", "<leader>6", "6gt");
+        vim.keymap.set("n", "<leader>7", "7gt");
+        vim.keymap.set("n", "<leader>8", "8gt");
+        vim.keymap.set("n", "<leader>9", "9gt");
+        vim.keymap.set("n", "<leader>0", ":tablast<cr>");
 
-        local toggleOutline = function()
-            local opened = vim.g.__ouline_active
-            if opened == nil then
-                opened = false
-            end
-            if opened then
-                vim.cmd('OutlineClose')
-            else
-                vim.cmd('OutlineOpen')
-            end
-            vim.g.__ouline_active = not opened
-        end
-
-        vim.keymap.set('n', '<Leader>o', toggleOutline, { silent = false })
-
-        vim.keymap.set('n', '<leader>f', ':Twilight<CR>', { silent = true })
+        vim.keymap.set("n", "<Leader>O", "O<Esc>O", { silent = true });
+        vim.keymap.set("n", "<Leader>o", "o<Esc>o", { silent = true });
     end
 })
