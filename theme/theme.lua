@@ -17,6 +17,8 @@ vim.opt.statuscolumn = "%s%=%T%l│%T";
 -- disbale tildas at empty lines
 vim.opt.fillchars = { eob = " "}
 
+vim.opt.colorcolumn = "81";
+
 -- status line
 vim.g.macro_recording = '';
 vim.api.nvim_create_autocmd("RecordingEnter", {
