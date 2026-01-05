@@ -11,10 +11,10 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
         vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", { silent = true });
         vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", { silent = true });
 
-        vim.keymap.set("n", "C-S-up", ":resize +5<CR>", { silent = true });
-        vim.keymap.set("n", "C-S-down", ":resize -5<CR>", { silent = true });
-        vim.keymap.set("n", "C-S-left", ":vertical resize -5<CR>", { silent = true });
-        vim.keymap.set("n", "C-S-right", ":vertical resize +5<CR>", { silent = true });
+        vim.keymap.set("n", "<C-S-up>", ":resize +5<CR>", { silent = true });
+        vim.keymap.set("n", "<C-S-down>", ":resize -5<CR>", { silent = true });
+        vim.keymap.set("n", "<C-S-left>", ":vertical resize -5<CR>", { silent = true });
+        vim.keymap.set("n", "<C-S-right>", ":vertical resize +5<CR>", { silent = true });
 
         vim.keymap.set("n", "qq", ":q<CR>", { silent = true });
         vim.keymap.set("n", "ss", ":w<CR>", { silent = true });
