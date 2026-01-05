@@ -86,7 +86,12 @@ require('lazy').setup({
 
         "preservim/nerdtree", -- file explorer
         "ryanoasis/vim-devicons", -- icons
-        "Yggdroot/indentLine", -- identation lines
+        {
+            "Yggdroot/indentLine", -- identation lines
+            config = function()
+                vim.g.indentLine_char = '⎸';
+            end
+        },
 
         -- ai
         {
