@@ -26,6 +26,10 @@ require('lazy').setup({
             build = ":TSUpdate",
             lazy = false,
             priority = 1000,
+            config = function()
+                require("nvim-treesitter.install").update({ with_sync = true });
+                vim.cmd([[TSToggle highlight]]);
+            end,
             opts = {
                 ensure_installed = {
                     "graphql", "typescript", "eex", "elixir",
