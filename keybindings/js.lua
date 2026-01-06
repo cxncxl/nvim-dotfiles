@@ -74,7 +74,5 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
         vim.keymap.set('n', '<F9>', ':!npm run build', { silent = false })
 
         vim.api.nvim_create_user_command('FormatQuotes', '%s/"/\'/g <CR> nohl <CR> :let @/ = "" <CR>', {})
-
-        vim.cmd('Neoformat')
     end
 })
