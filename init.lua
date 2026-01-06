@@ -24,6 +24,7 @@ require('keybindings/telescope');
 require('keybindings/go');
 require('keybindings/dart');
 require('keybindings/zig');
+require('keybindings/js');
 
 -- snippets
 require("snippets/go");
