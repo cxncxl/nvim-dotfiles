@@ -10,7 +10,7 @@ vim.cmd([[
 ]])
 
 vim.opt.background = "dark"
-vim.cmd.colorscheme("mellow")
+vim.cmd.colorscheme("kanagawa-dragon")
 
 vim.opt.statuscolumn = "%s%=%T%l│%T";
 
@@ -41,9 +41,9 @@ require("lualine").setup({
     },
     sections = {
         lualine_a = {'mode'},
-        lualine_b = {'diff', 'diagnostics'},
+        lualine_b = {'diff'},
         lualine_c = {'%=', "'󰈔'", 'filename'},
-        lualine_x = {},
+        lualine_x = {'diagnostics'},
         lualine_y = {'vim.g.macro_recording'},
         lualine_z = {'location'},
     },
