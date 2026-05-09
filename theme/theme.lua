@@ -10,7 +10,12 @@ vim.cmd([[
 ]])
 
 vim.opt.background = "dark"
-vim.cmd.colorscheme("kanagawa-dragon")
+vim.cmd.colorscheme("vesper")
+vim.cmd([[
+    hi Normal guibg=#1a1a1a
+    hi Keyword guifg=#f9bcc3
+    hi MatchParen guifg=#f9bcc3 guibg=#2a2a2a
+]])
 
 vim.opt.statuscolumn = "%s%=%T%l│%T";
 
@@ -41,10 +46,10 @@ require("lualine").setup({
     },
     sections = {
         lualine_a = {'mode'},
-        lualine_b = {'diff'},
-        lualine_c = {'%=', "'󰈔'", 'filename'},
+        lualine_b = {},
+        lualine_c = {'filename'},
         lualine_x = {'diagnostics'},
         lualine_y = {'vim.g.macro_recording'},
-        lualine_z = {'location'},
+        lualine_z = {},
     },
 })

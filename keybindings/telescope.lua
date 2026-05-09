@@ -11,8 +11,24 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
                     'method',
                     'class',
                     'type',
+                    'interface',
+                    'enum',
+                    'constant',
+                    'variable',
                 },
             });
         end)
     end
 });
+
+require("telescope").setup({
+    defaults = {
+        attach_mappings = function(buf_nr, map)
+            map("i", "<C-i>", function ()
+                local actions_state = require("telescope.actions.state")
+                local picker = actions_state.get_current_picker(buf_nr)
+                picker:set_prompt(":interface:")
+            end)
+        end
+    }
+})

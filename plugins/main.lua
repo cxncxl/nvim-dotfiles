@@ -65,6 +65,7 @@ require('lazy').setup({
         'L3MON4D3/LuaSnip', -- Snippets plugin
         'ibhagwan/fzf-lua', -- fuzzy-finder
         'dense-analysis/ale', -- js prettier / linter
+        'tpope/vim-fugitive', -- git integration
 
         'nvim-treesitter/nvim-treesitter-context', -- shows function/class name at the top
 
@@ -101,39 +102,6 @@ require('lazy').setup({
         {
             "monkoose/neocodeium",
         },
-        {
-            "ThePrimeagen/99",
-            config = function()
-                local _99 = require("99")
-
-                -- For logging that is to a file if you wish to trace through requests
-                -- for reporting bugs, i would not rely on this, but instead the provided
-                -- logging mechanisms within 99.  This is for more debugging purposes
-                local cwd = vim.uv.cwd()
-                local basename = vim.fs.basename(cwd)
-                _99.setup({
-                    logger = {
-                        level = _99.DEBUG,
-                        path = "/tmp/" .. basename .. ".99.debug",
-                        print_on_error = true,
-                    },
-
-                    md_files = {
-                        "AGENT.md",
-                    },
-                })
-
-                vim.keymap.set("n", "<leader>9f", function()
-                    _99.fill_in_function()
-                end)
-                vim.keymap.set("v", "<leader>9v", function()
-                    _99.visual()
-                end)
-                vim.keymap.set("v", "<leader>9s", function()
-                    _99.stop_all_requests()
-                end)
-            end,
-        },
 
         -- autoclose
         {
@@ -151,6 +119,52 @@ require('lazy').setup({
             'nvim-lualine/lualine.nvim',
             dependencies = { 'nvim-tree/nvim-web-devicons' }
         },
+
+        { -- opencode integration
+          "nickjvandyke/opencode.nvim",
+          version = "*", -- Latest stable release
+          dependencies = {
+            {
+              -- `snacks.nvim` integration is recommended, but optional
+              ---@module "snacks" <- Loads `snacks.nvim` types for configuration intellisense
+              "folke/snacks.nvim",
+              optional = true,
+              opts = {
+                input = {}, -- Enhances `ask()`
+                picker = { -- Enhances `select()`
+                  actions = {
+                    opencode_send = function(...) return require("opencode").snacks_picker_send(...) end,
+                  },
+                  win = {
+                    input = {
+                      keys = {
+                        ["<a-a>"] = { "opencode_send", mode = { "n", "i" } },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          config = function()
+            vim.o.autoread = true -- Required for `opts.events.reload`
+
+            -- Recommended/example keymaps
+            vim.keymap.set({ "n", "x" }, "<C-s>", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode…" })
+            vim.keymap.set({ "n", "x" }, "<C-x>", function() require("opencode").select() end,                          { desc = "Execute opencode action…" })
+            vim.keymap.set({ "n", "t" }, "<C-.>", function() require("opencode").toggle() end,                          { desc = "Toggle opencode" })
+
+            vim.keymap.set({ "n", "x" }, "go",  function() return require("opencode").operator("@this ") end,        { desc = "Add range to opencode", expr = true })
+            vim.keymap.set("n",          "goo", function() return require("opencode").operator("@this ") .. "_" end, { desc = "Add line to opencode", expr = true })
+
+            vim.keymap.set("n", "<S-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "Scroll opencode up" })
+            vim.keymap.set("n", "<S-C-d>", function() require("opencode").command("session.half.page.down") end, { desc = "Scroll opencode down" })
+
+            -- You may want these if you use the opinionated `<C-a>` and `<C-x>` keymaps above — otherwise consider `<leader>o…` (and remove terminal mode from the `toggle` keymap)
+            vim.keymap.set("n", "+", "<C-a>", { desc = "Increment under cursor", noremap = true })
+            vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement under cursor", noremap = true })
+          end,
+        }
     },
     ui = {
         show_on_startup = false,

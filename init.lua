@@ -13,6 +13,7 @@ require("plugins/neocodium");
 require("plugins/treesitter-context");
 require("plugins/noice");
 require("plugins/treesitter");
+-- require("plugins/dap")
 
 -- lsp
 require('lsp/lsp');
@@ -33,6 +34,8 @@ require("snippets/html");
 -- language-specific configs
 require('settings/markdown');
 require('settings/json');
+-- common editor settings
+require('settings/main');
 
 -- commands
 require('commands/commands');

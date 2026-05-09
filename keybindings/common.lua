@@ -35,5 +35,21 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
 
         vim.keymap.set("n", "<Leader>O", "O<Esc>O", { silent = true });
         vim.keymap.set("n", "<Leader>o", "o<Esc>o", { silent = true });
+
+        vim.keymap.set("n", "<Leader>h", function() 
+            vim.lsp.inlay_hint.enable(vim.lsp.inlay_hist.is_enabled());
+        end, { silent = true });
+
+        vim.keymap.set("n", "<Leader>gn", function()
+            vim.cmd("Gitsigns next_hunk");
+        end, { silent = true });
+
+        vim.keymap.set("n", "<Leader>gN", function()
+            vim.cmd("Gitsigns prev_hunk");
+        end, { silent = true });
+
+        vim.keymap.set("n", "<Leader>gH", function()
+            vim.cmd("Gitsigns preview_hunk_inline");
+        end, { silent = true });
     end
 })
