@@ -120,6 +120,10 @@ require('lazy').setup({
             dependencies = { 'nvim-tree/nvim-web-devicons' }
         },
 
+        { -- c# lsp
+            'seblyng/roslyn.nvim'
+        },
+
         { -- opencode integration
           "nickjvandyke/opencode.nvim",
           version = "*", -- Latest stable release

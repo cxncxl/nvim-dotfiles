@@ -67,7 +67,11 @@ vim.lsp.config("gdshader_lsp", {
 vim.lsp.enable("gdshader_lsp");
 
 vim.lsp.enable("prismals");
-vim.lsp.enable('ts_ls');
+-- vim.lsp.enable('ts_ls');
+vim.lsp.enable('tsgo');
+
+-- if does not work with Unity - make sure to generate project files (.sln(x))
+vim.lsp.enable('roslyn');
 
 cmp.setup.filetype({ 'sql' }, {
     sources = {
