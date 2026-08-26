@@ -22,26 +22,20 @@ require('lazy').setup({
         "nvim-lua/plenary.nvim", -- lua helpers
         {
             "nvim-treesitter/nvim-treesitter",
-            tag = "v0.10.0",
             build = ":TSUpdate",
             lazy = false,
             priority = 1000,
             config = function()
-                require("nvim-treesitter.install").update({ with_sync = true });
-                vim.cmd([[TSToggle highlight]]);
-            end,
-            opts = {
-                ensure_installed = {
+                require("nvim-treesitter").install({
                     "graphql", "typescript", "eex", "elixir",
-                    "erlang", "heex", "html", "surface",
-                },
-                matchup = { enable = true },
-                indent = { enable = true },
-                highlight = {
-                    enable = true,
-                    additional_vim_regex_highlighting = false,
-                },
-            },
+                    "erlang", "heex", "html", "surface", "r",
+                })
+                vim.api.nvim_create_autocmd("FileType", {
+                    callback = function(args)
+                        pcall(vim.treesitter.start, args.buf)
+                    end,
+                })
+            end,
         },
         {
             "folke/noice.nvim", -- better command line
@@ -82,6 +76,9 @@ require('lazy').setup({
         "mcchrish/zenbones.nvim",
         "sponkurtus2/angelic.nvim",
 
+        -- git diff viewer
+        "sindrets/diffview.nvim",
+
         { dir = '/users/r1sha/Projects/petprojects/nvim-todo' },
         { dir = '/users/r1sha/Projects/petprojects/nvim-f2' },
 
@@ -91,11 +88,55 @@ require('lazy').setup({
 
         "preservim/nerdtree", -- file explorer
         "ryanoasis/vim-devicons", -- icons
-        {
-            "Yggdroot/indentLine", -- identation lines
+
+        { -- indentation lines
+            "lukas-reineke/indent-blankline.nvim",
             config = function()
-                vim.g.indentLine_char = '⎸';
+                local hooks = require("ibl.hooks")
+
+                -- Function to calculate and apply the active theme color
+                local function apply_scope_highlights()
+                    local theme_hl = vim.api.nvim_get_hl(0, { name = "Keyword" })
+                    local color_hex = (theme_hl and theme_hl.fg)
+                        and string.format("#%06x", theme_hl.fg) or "#785f62"
+                    vim.api.nvim_set_hl(0, "IblScopeVertical", {
+                        fg = color_hex,
+                        bg = "NONE"
+                    })
+                end
+
+                -- 1. Run it inside the hook for IBL's internal rendering cycles
+                hooks.register(hooks.type.HIGHLIGHT_SETUP, apply_scope_highlights)
+
+                -- 2. Run it inside an Autocommand to intercept your colorscheme whenever it loads
+                vim.api.nvim_create_autocmd("ColorScheme", {
+                    pattern = "*",
+                    callback = apply_scope_highlights,
+                })
+
+                require("ibl").setup({
+                    indent = {
+                        char = "⎸",
+                        highlight = { "LineNr" }
+                    },
+                    scope = {
+                        highlight = { "IblScopeVertical" },
+                        show_start = true,
+                        show_end = true,
+                    }
+                })
             end
+        },
+
+        { -- diagnostics rendered beatifully
+            "Maan2003/lsp_lines.nvim",
+            config = function()
+                require("lsp_lines").setup()
+                vim.diagnostic.config({
+                    virtual_text = false,
+                })
+                vim.diagnostic.config({ virtual_lines = true })
+            end,
         },
 
         -- ai
@@ -124,50 +165,21 @@ require('lazy').setup({
             'seblyng/roslyn.nvim'
         },
 
-        { -- opencode integration
-          "nickjvandyke/opencode.nvim",
-          version = "*", -- Latest stable release
-          dependencies = {
-            {
-              -- `snacks.nvim` integration is recommended, but optional
-              ---@module "snacks" <- Loads `snacks.nvim` types for configuration intellisense
-              "folke/snacks.nvim",
-              optional = true,
-              opts = {
-                input = {}, -- Enhances `ask()`
-                picker = { -- Enhances `select()`
-                  actions = {
-                    opencode_send = function(...) return require("opencode").snacks_picker_send(...) end,
-                  },
-                  win = {
-                    input = {
-                      keys = {
-                        ["<a-a>"] = { "opencode_send", mode = { "n", "i" } },
-                      },
-                    },
-                  },
-                },
-              },
+        { -- send code to REPL
+            "jpalardy/vim-slime",
+            keys = {
+                { "<leader>rc", "<cmd>SlimeConfig<cr>",               desc = "Slime Config" },
+                { "<leader>rs", "<Plug>SlimeSendCell<BAR>/^# %%<CR>", desc = "Slime Send Cell" },
             },
-          },
-          config = function()
-            vim.o.autoread = true -- Required for `opts.events.reload`
+            config = function()
+                vim.g.slime_target = "tmux"
+                vim.g.slime_cell_delimiter = "# %%"
+                vim.g.slime_bracketed_paste = 1
+            end,
+        },
 
-            -- Recommended/example keymaps
-            vim.keymap.set({ "n", "x" }, "<C-s>", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode…" })
-            vim.keymap.set({ "n", "x" }, "<C-x>", function() require("opencode").select() end,                          { desc = "Execute opencode action…" })
-            vim.keymap.set({ "n", "t" }, "<C-.>", function() require("opencode").toggle() end,                          { desc = "Toggle opencode" })
-
-            vim.keymap.set({ "n", "x" }, "go",  function() return require("opencode").operator("@this ") end,        { desc = "Add range to opencode", expr = true })
-            vim.keymap.set("n",          "goo", function() return require("opencode").operator("@this ") .. "_" end, { desc = "Add line to opencode", expr = true })
-
-            vim.keymap.set("n", "<S-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "Scroll opencode up" })
-            vim.keymap.set("n", "<S-C-d>", function() require("opencode").command("session.half.page.down") end, { desc = "Scroll opencode down" })
-
-            -- You may want these if you use the opinionated `<C-a>` and `<C-x>` keymaps above — otherwise consider `<leader>o…` (and remove terminal mode from the `toggle` keymap)
-            vim.keymap.set("n", "+", "<C-a>", { desc = "Increment under cursor", noremap = true })
-            vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement under cursor", noremap = true })
-          end,
+        { -- R bundle
+            "R-nvim/R.nvim"
         }
     },
     ui = {

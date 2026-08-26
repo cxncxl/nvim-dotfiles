@@ -84,3 +84,5 @@ cmp.setup.filetype({ 'sql' }, {
 --     cmd = { "/users/r1sha/.lsp/elixir/language_server.sh" },
 -- });
 -- vim.lsp.enable("elixir_ls");
+
+vim.lsp.enable("r_language_server");

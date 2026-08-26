@@ -53,3 +53,4 @@ vim.opt.clipboard = "unnamed";
 
 -- use space as <Leader>
 vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '

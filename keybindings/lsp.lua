@@ -15,7 +15,7 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
         vim.keymap.set("n", "<Leader>rf", vim.lsp.buf.format);
 
         vim.keymap.set("n", "<Leader>e", function()
-            vim.diagnostic.jump({ count = 1, float = true });
+            vim.diagnostic.jump({ count = 1, float = false });
         end);
         vim.keymap.set("n", "<Leader>E", function() vim.diagnostic.jump({ count = -1 }) end);
     end

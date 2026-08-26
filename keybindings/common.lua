@@ -51,5 +51,22 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
         vim.keymap.set("n", "<Leader>gH", function()
             vim.cmd("Gitsigns preview_hunk_inline");
         end, { silent = true });
+
+        vim.keymap.set("n", "<Leader>gG", function ()
+            vim.cmd("DiffviewOpen");
+        end)
+
+        vim.keymap.set("n", "<Leader>G", function ()
+            vim.api.nvim_del_augroup_by_name("nvim.terminal")
+            vim.api.nvim_create_autocmd("TermClose", {
+              callback = function()
+                if vim.v.event.status == 0 then
+                  vim.cmd("bdelete!")
+                end
+              end,
+            })
+            vim.cmd("vsplit | terminal lazygit");
+            vim.cmd("startinsert");
+        end)
     end
 })
